@@ -69,9 +69,11 @@ class AddressSpace {
     }
 
     AddSubNet(count) {
+        let mask = 0
         if (count < 2)
-            count = 2;
-        let mask = this.GetMaskForCount(count);
+            mask = this.GetMaskForCount(2);
+        else
+            mask = this.GetMaskForCount(count);
         this.FindFreeAddress(mask, count);
     }
 
