@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BI-PSI : IP Planner</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>BI-PSI</h2>
+            <p class="lead">IP planner</p>
+        </div>
+        <div class="row">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <input class="form-control" id="SubNetIP" type="text" minlength="7" maxlength="15" size="15"
+                        pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$" placeholder="Subnet IP address">
+                </div>
+                /
+                <div class="col-auto">
+                    <input class="form-control" id="SubNetMask" type="number" min="1" max="2" size="2" placeholder="Mask">
+                </div>
+                <button type="submit" class="btn btn-primary">Calculate</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
