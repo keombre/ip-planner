@@ -17,19 +17,101 @@
             <p class="lead">IP planner</p>
         </div>
         <div class="row">
+            <div class="col-md-8">
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <input class="form-control" id="SubNetIP" type="text" minlength="7" maxlength="15" size="15"
+                            pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$"
+                            placeholder="Subnet IP address" required>
+                    </div>
+                    /
+                    <div class="col-auto">
+                        <input class="form-control" id="SubNetMask" type="number" min="1" max="32" size="2"
+                            placeholder="Mask" required>
+                    </div>
+                    <button class="btn btn-primary" id="SubNetBtn" onclick="ready();">Ready!</button>
+                </div>
+            </div>
+            
+            <div class="float-right">
             <div class="form-row align-items-center">
                 <div class="col-auto">
-                    <input class="form-control" id="SubNetIP" type="text" minlength="7" maxlength="15" size="15"
-                        pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$" placeholder="Subnet IP address">
+                    <input class="form-control" id="NewCount" type="number" min="0" placeholder="# of addresses"
+                        required disabled>
                 </div>
-                /
-                <div class="col-auto">
-                    <input class="form-control" id="SubNetMask" type="number" min="1" max="2" size="2" placeholder="Mask">
-                </div>
-                <button type="submit" class="btn btn-primary">Calculate</button>
+                <button class="btn btn-success" id="NewBtn" onclick="add();" disabled>&#43;</button>
             </div>
+        </div>
+        </div>
+        <div class="row mt-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"># of addresses</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Broadcast</th>
+                    </tr>
+                </thead>
+                <tbody id="AddrTable">
+                </tbody>
+            </table>
         </div>
     </div>
 </body>
+<script>
+    let space;
+    function ready() {
+        let ipElem = document.getElementById('SubNetIP');
+        let maskElem = document.getElementById('SubNetMask');
+        if (!ipElem.reportValidity() || !maskElem.reportValidity())
+            return;
+
+        ipElem.disabled = true;
+        maskElem.disabled = true;
+        document.getElementById('SubNetBtn').disabled = true;
+        document.getElementById('NewCount').disabled = false;
+        document.getElementById('NewBtn').disabled = false;
+
+        let parts = ipElem.value.split(".");
+        let ip = new IP(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]));
+        let mask = new Mask(parseInt(maskElem.value));
+        space = new AddressSpace(ip, mask);
+    }
+
+    function add() {
+        let countElem = document.getElementById('NewCount');
+        if (!countElem.reportValidity())
+            return;
+        
+        space.AddSubNet(parseInt(countElem.value));
+        
+        clearTable();
+        space.subnets.forEach(e => addRow(e.count, e, e.Broadcast()));
+    }
+
+    function clearTable() {
+        let table = document.getElementById('AddrTable');
+        table.innerHTML = "";
+    }
+
+    function addRow(count, address, broadcast) {
+        let table = document.getElementById('AddrTable');
+        let tr = document.createElement('tr');
+
+        let td1 = document.createElement('td');
+        let td2 = document.createElement('td');
+        let td3 = document.createElement('td');
+
+        td1.innerText = count;
+        td2.innerText = address;
+        td3.innerText = broadcast;
+
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+
+        table.appendChild(tr);
+    }
+</script>
 
 </html>

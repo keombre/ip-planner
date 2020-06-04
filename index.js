@@ -41,9 +41,10 @@ class Mask {
 }
 
 class SubNet {
-    constructor(address, mask) {
+    constructor(address, mask, count) {
         this.address = address;
         this.mask = mask;
+        this.count = count
     }
 
     Broadcast() {
@@ -71,25 +72,25 @@ class AddressSpace {
         if (count < 2)
             count = 2;
         let mask = this.GetMaskForCount(count);
-        this.FindFreeAddress(mask);
+        this.FindFreeAddress(mask, count);
     }
 
-    static GetNextSubNet(subNet, mask) {
+    static GetNextSubNet(subNet, mask, count) {
         let address = IP.FromBitMap(subNet.Broadcast().bitMap + 1);
         if (address.MaskPrefix(mask).equals(address))
-            return new SubNet(address, mask);
+            return new SubNet(address, mask, count);
         let ip = IP.FromBitMap(address.MaskPrefix(mask).bitMap + (1 << mask.Offset()));
-        return new SubNet(ip, mask);
+        return new SubNet(ip, mask, count);
     }
 
-    FindFreeAddress(mask) {
+    FindFreeAddress(mask, count) {
         if (this.subnets.length == 0) {
-            this.subnets.push(new SubNet(this.address, mask));
+            this.subnets.push(new SubNet(this.address, mask, count));
             return;
         }
 
         for(let i = 0; i < this.subnets.length; i++) {
-            let nextSubNet = AddressSpace.GetNextSubNet(this.subnets[i], mask);
+            let nextSubNet = AddressSpace.GetNextSubNet(this.subnets[i], mask, count);
             if (i + 1 == this.subnets.length) {
                 this.subnets.push(nextSubNet);
                 return;
