@@ -9,7 +9,7 @@ class IP {
     }
     
     static FromBitMap(bitMap) {
-        return new IP(bitMap >> 24, (bitMap >> 16) & 255, (bitMap >> 8) & 255, bitMap & 255);
+        return new IP((bitMap >> 24) & 255, (bitMap >> 16) & 255, (bitMap >> 8) & 255, bitMap & 255);
     }
 
     MaskPrefix(mask) {
